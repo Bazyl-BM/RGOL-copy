@@ -1,5 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
-import console from 'console';
+
+import dotenv from 'dotenv';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import dbConnect from '@/utils/dbConnect';
@@ -7,15 +8,15 @@ import dbConnect from '@/utils/dbConnect';
 import ConversationM from '../../../models/conversationModel';
 import User from '../../../models/UserModel';
 
-const DatauriParser = require('datauri/parser');
+dotenv.config();
 const cloudinary = require('cloudinary');
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     cloudinary.config({
-      cloud_name: 'dwxmpjnbo',
-      api_key: '886948498189263',
-      api_secret: 'p1QYUYgh9lKnCETMEr0gEcG-zHY',
+      cloud_name: process.env.CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
     });
     await dbConnect();
 

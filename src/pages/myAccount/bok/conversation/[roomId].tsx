@@ -127,7 +127,7 @@ const Conversation = ({ data, userName }) => {
       router.push('/access/login');
     }
   }, [session, status]);
-
+  socket = io();
   const socketInitializer = async () => {
     // We just call it because we don't need anything else out of it
     await fetch('/api/myAccount/socket', {
@@ -135,8 +135,6 @@ const Conversation = ({ data, userName }) => {
       body: data.data._id,
     });
 
-    socket = io();
-    console.log(socket);
     socket.on('connect', function () {
       socket.emit('room', data.data._id);
     });
@@ -149,12 +147,10 @@ const Conversation = ({ data, userName }) => {
     socketInitializer();
 
     setMessages(data.data.message);
-    return () => socket.emit("leave", data.data._id)
+    return () => socket.emit('leave', data.data._id);
   }, []);
   useEffect(() => {
     if (!messages.some((message) => message.id === pmessages.id) && pmessages) {
-      console.log(pmessages);
-      console.log(socket);
       setMessages((prev) => [...prev, pmessages]);
     }
   }, [pmessages]);

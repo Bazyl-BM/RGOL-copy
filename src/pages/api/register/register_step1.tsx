@@ -1,21 +1,23 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-anonymous-default-export */
 import sgMail from '@sendgrid/mail';
+import dotenv from 'dotenv';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import dbConnect from '@/utils/dbConnect';
 
 import User from '../../../models/UserModel';
 
+dotenv.config();
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await dbConnect();
 
     const user = await User.create({ email: req.body.email });
-
-    sgMail.setApiKey(
-      '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'
-    );
+    if (!process.env.SGMail_API) {
+      throw new Error('Please add your SGMail_API to .env.local');
+    }
+    sgMail.setApiKey(process.env.SGMail_API);
 
     const msg = {
       to: req.body.email,
